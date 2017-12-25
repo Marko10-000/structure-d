@@ -1,0 +1,12 @@
+{
+    "authors": ["Marko Semet"],
+    "description": "Supporting different types and containers.",
+    "homepage": "https://marko10000.tk/redirect/structures-d",
+    "license": "GPL-3.0",
+    "name": "structuresd",
+    "sourcePaths": [
+        "source"
+    ],
+    "targetName": "structures-d",
+    "targetType": "sourceLibrary"
+}
