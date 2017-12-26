@@ -16,11 +16,6 @@
  */
 module structuresd.containers.queue;
 
-private
-{
-	import core.atomic;
-}
-
 /**
  * A queue
  */
