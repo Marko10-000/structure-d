@@ -22,6 +22,7 @@ private
 	import std.algorithm;
 	import std.algorithm.comparison;
 	import std.algorithm.sorting;
+	import structuresd;
 	import structuresd.dimension;
 	import structuresd.utils;
 }
@@ -168,9 +169,9 @@ body {
  * @tparam MAX Maximal node size before spilt. MAX have to be at least 3 and odd.
  * @tparam MIN Minimal node isze before merge. MIN have to be greater then 0 and lower or equal to 2 * MAX + 1.
  */
-public final class RTree(DATA_T, TYPE, size_t MAX, size_t MIN)
+public final class RTree(DATA_T, TYPE, size_t MAX, size_t MIN, FEATURES features = FEATURES.NON)
 {
-	//static assert(isGeometry!TYPE);
+	static assert(isGeometry!TYPE);
 	static assert(MAX % 2 == 1);
 	static assert(MAX >= 3);
 	static assert(MIN * 2 <= MAX + 1);

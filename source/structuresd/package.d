@@ -18,5 +18,6 @@ module structuresd;
 
 public enum FEATURES : uint
 {
-	NON = 0
+	NON = 0,
+	SNAPSHOT = 1
 }
