@@ -19,7 +19,7 @@ module structuresd.utils;
 private
 {
 	import std.algorithm.comparison;
-	import std.traits;
+	import std.meta;
 }
 
 /**
@@ -40,4 +40,32 @@ template isSameContainerFunction(BASE_T, TYPE_T, string NAME)
 {
 	static assert(__traits(hasMember, BASE_T, NAME));
 	public enum bool isSameContainerFunction = __traits(hasMember, TYPE_T, NAME) && isSameFunction!(__traits(getMember, BASE_T, NAME), __traits(getMember, TYPE_T, NAME));
+}
+
+/**
+ * Checks if an member has an attribute.
+ * @tparam ATTRIBUTE The attribute to check if exits.
+ * @tparam MEMBER The member to check.
+ */
+public template hasAttribute(ATTRIBUTE, alias MEMBER)
+{
+	enum bool hasAttribute = Filter!(__hasAttribute!ATTRIBUTE, __traits(getAttributes, MEMBER)).length > 0;
+}
+public template __hasAttribute(ATTRIBUTE)
+{
+	enum bool __hasAttribute(MEMBER) = is(ATTRIBUTE == MEMBER);
+}
+
+/**
+ * List all members with matching credentials.
+ * @tparam CHECKER The checker function
+ * @tparam TYPE The type to search in.
+ */
+public template membersWith(alias CHECKER, TYPE)
+{
+	alias membersWith = Filter!(__membersWith!(CHECKER, TYPE), __traits(allMembers, TYPE));
+}
+public template __membersWith(alias CHECKER, TYPE)
+{
+	alias __membersWith(alias T) = CHECKER!(__traits(getMember, TYPE, T));
 }
