@@ -49,11 +49,11 @@ template isSameContainerFunction(BASE_T, TYPE_T, string NAME)
  */
 public template hasAttribute(ATTRIBUTE, alias MEMBER)
 {
-	enum bool hasAttribute = Filter!(__hasAttribute!ATTRIBUTE, __traits(getAttributes, MEMBER)).length > 0;
+	enum bool hasAttribute = Filter!(_hasAttribute!ATTRIBUTE, __traits(getAttributes, MEMBER)).length > 0;
 }
-public template __hasAttribute(ATTRIBUTE)
+private template _hasAttribute(ATTRIBUTE)
 {
-	enum bool __hasAttribute(MEMBER) = is(ATTRIBUTE == MEMBER);
+	enum bool _hasAttribute(MEMBER) = is(ATTRIBUTE == MEMBER);
 }
 
 /**
@@ -63,9 +63,50 @@ public template __hasAttribute(ATTRIBUTE)
  */
 public template membersWith(alias CHECKER, TYPE)
 {
-	alias membersWith = Filter!(__membersWith!(CHECKER, TYPE), __traits(allMembers, TYPE));
+	alias membersWith = Filter!(_membersWith!(CHECKER, TYPE), __traits(allMembers, TYPE));
 }
-public template __membersWith(alias CHECKER, TYPE)
+private template _membersWith(alias CHECKER, TYPE)
 {
-	alias __membersWith(alias T) = CHECKER!(__traits(getMember, TYPE, T));
+	alias _membersWith(alias T) = CHECKER!(__traits(getMember, TYPE, T));
+}
+
+/**
+ * Returns array type
+ * @tparam T The array to unpack
+ */
+public template arrayType(alias T = A[], A)
+{
+	alias arrayType = A;
+}
+
+/**
+ * Returns the minimum.
+ * @tparam T Parameters of the function
+ * @return Type from the first parameter
+ */
+pragma(inline, true)
+public T[0] min(T...)(T data) if(T.length > 0)
+{
+	T[0] result = data[0];
+	static foreach(i; data[1..$])
+	{
+		result = result < i ? result : i;
+	}
+	return result;
+}
+
+/**
+ * Returns the maximum.
+ * @tparam T Parameters of the function
+ * @return Type from the first parameter
+ */
+pragma(inline, true)
+public T[0] max(T...)(T data)
+{
+	T[0] result = data[0];
+	static foreach(i; data)
+	{
+		result = result > i ? result : i;
+	}
+	return result;
 }

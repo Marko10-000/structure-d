@@ -53,8 +53,5 @@ public template isSerialize(TYPE)
 /**
  * List members
  */
-public template listSerializeMembers(TYPE)
-{
-	alias listSerializeMembers = membersWith!(__listSerializeMembers, TYPE);
-}
-public alias __listSerializeMembers(alias T) = hasAttribute!(SERIALIZE, T);
+public alias listSerializeMembers(TYPE) = membersWith!(_listSerializeMembers, TYPE);
+private alias _listSerializeMembers(alias T) = hasAttribute!(SERIALIZE, T);
