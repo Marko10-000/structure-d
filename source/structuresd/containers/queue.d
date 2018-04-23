@@ -31,7 +31,6 @@ public class Queue(TYPE, bool THREAD_SAFE = false)
 	private Entry* front;
 	private Entry* back;
 
-	pragma(inline, true)
 	public this()
 	{
 		this.front = new Entry;
@@ -40,7 +39,6 @@ public class Queue(TYPE, bool THREAD_SAFE = false)
 		this.back = this.front;
 	}
 
-	pragma(inline, true)
 	private void _insert(TYPE data)
 	{
 		Entry* tmp = new Entry;
@@ -50,7 +48,6 @@ public class Queue(TYPE, bool THREAD_SAFE = false)
 		this.back.next = tmp;
 		this.back = tmp;
 	}
-	pragma(inline, true)
 	public void insert(TYPES...)(TYPES types)
 	{
 		static if(THREAD_SAFE)
@@ -72,7 +69,6 @@ public class Queue(TYPE, bool THREAD_SAFE = false)
 		}
 	}
 
-	pragma(inline, true)
 	public bool _fetch(ref TYPE data)
 	{
 		while(true)
@@ -93,7 +89,6 @@ public class Queue(TYPE, bool THREAD_SAFE = false)
 			}
 		}
 	}
-	pragma(inline, true)
 	public bool fetch(ref TYPE data)
 	{
 		static if(THREAD_SAFE)

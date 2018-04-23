@@ -19,8 +19,6 @@ module structuresd.dimension.rtree;
 private
 {
 	import core.exception;
-	import std.algorithm;
-	import std.algorithm.comparison;
 	import std.algorithm.sorting;
 	import structuresd;
 	import structuresd.dimension;
@@ -33,7 +31,6 @@ private
  * @param toCompare function to get geometry to compare
  * @return two list for one of the old container and one for the new one
  */
-pragma(inline, true)
 private pure nothrow T1[][2] _split(T1, size_t MIN, size_t MAX, T2 = T1)(T1[] data, T2 function(T1) nothrow pure toCompare)
 in {
 	static assert(MIN >= 1);
@@ -90,12 +87,10 @@ body {
 				t2 = min(getInseredVolume(toCompare(a), toCompare(t)), getInseredVolume(toCompare(b), toCompare(t)));
 			}
 
-			pragma(inline, true)
 			int opCmp(const SortElement b)
 			{
 				return this.t2 < b.t2 ? -1 : this.t2 > b.t2 ? 1 : 0;
 			}
-			pragma(inline, true)
 			bool opEquals(const SortElement b)
 			{
 				return this.t2 == b.t2;
@@ -108,7 +103,11 @@ body {
 			sorted[i] = SortElement(data[i]);
 		}
 		size_t tmp = 0;
-		sorted.sort.each!((ref SortElement t) { data[tmp] = t.t1; tmp++; });
+		foreach(SortElement t; sorted.sort)
+		{
+			data[tmp] = t.t1;
+			tmp++;
+		}
 	}
 
 	// Do split
@@ -189,7 +188,6 @@ public final class RTree(DATA_T, TYPE, size_t MAX, size_t MIN, FEATURES features
 			public _Node*[MAX] nodes;
 		}
 
-		pragma(inline, true)
 		@nogc
 		private nothrow pure _Node* getRoot()
 		{
@@ -317,7 +315,6 @@ public final class RTree(DATA_T, TYPE, size_t MAX, size_t MIN, FEATURES features
 				}
 			}
 		}
-		pragma(inline, true)
 		@nogc
 		private pure nothrow void updateSize(bool RECUSIVE)()
 		{
@@ -362,7 +359,6 @@ public final class RTree(DATA_T, TYPE, size_t MAX, size_t MIN, FEATURES features
 			this.useable = false;
 		}
 
-		pragma(inline, true)
 		private void toNext()
 		{
 			while(this.current !is null)
@@ -425,7 +421,6 @@ public final class RTree(DATA_T, TYPE, size_t MAX, size_t MIN, FEATURES features
 			}
 		}
 
-		pragma(inline, true)
 		public void popFront()
 		{
 			if(!this.useable)
@@ -433,9 +428,8 @@ public final class RTree(DATA_T, TYPE, size_t MAX, size_t MIN, FEATURES features
 			this.useable = false;
 			this.index++;
 		}
-		pragma(inline, true)
 		@property
-		bool empty()
+		pure nothrow bool empty()
 		{
 			if(!useable)
 			{
@@ -444,7 +438,6 @@ public final class RTree(DATA_T, TYPE, size_t MAX, size_t MIN, FEATURES features
 			}
 			return false;
 		}
-		pragma(inline, true)
 		DATA_T front()
 		{
 			if(!useable)
@@ -461,7 +454,6 @@ public final class RTree(DATA_T, TYPE, size_t MAX, size_t MIN, FEATURES features
 			}
 		}
 
-		pragma(inline, true)
 		int opApply(scope int delegate(DATA_T) func)
 		{
 			int counter = 0;

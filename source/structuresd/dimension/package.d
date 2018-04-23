@@ -18,7 +18,6 @@ module structuresd.dimension;
 
 private
 {
-	import std.algorithm.comparison;
 	import std.traits;
 	import structuresd.utils;
 }
@@ -84,7 +83,6 @@ public final struct Cuboid(uint DIMS, TYPE = double)
 	public Point!(DIMS, TYPE) a;
 	public Point!(DIMS, TYPE) b;
 
-	pragma(inline, true)
 	public this(Point!(DIMS, TYPE) a, Point!(DIMS, TYPE) b)
 	{
 		static foreach(ulong i; 0..DIMS)
@@ -94,7 +92,6 @@ public final struct Cuboid(uint DIMS, TYPE = double)
 		}
 	}
 
-	pragma(inline, true)
 	public nothrow pure Cuboid maxGeometry(Cuboid c)
 	{
 		Cuboid res;
@@ -105,7 +102,6 @@ public final struct Cuboid(uint DIMS, TYPE = double)
 		}
 		return res;
 	}
-	pragma(inline, true)
 	public nothrow pure TYPE volume()
 	{
 		TYPE res;
@@ -115,7 +111,6 @@ public final struct Cuboid(uint DIMS, TYPE = double)
 		}
 		return res < 0 ? -res : res;
 	}
-	pragma(inline, true)
 	public nothrow pure bool containsPoint(Point!(DIMS, TYPE) p)
 	{
 		static foreach(ulong i; 0..DIMS)
@@ -127,13 +122,11 @@ public final struct Cuboid(uint DIMS, TYPE = double)
 		}
 		return true;
 	}
-	pragma(inline, true)
 	public nothrow pure bool contains(Cuboid c)
 	{
 		return this.allDotsCheck(c) && c.allDotsCheck(this);
 	}
 
-	pragma(inline, true)
 	private pure nothrow bool allDotsCheck(Cuboid c)
 	{
 		foreach(ulong i; 0..(1 << DIMS))
@@ -157,7 +150,7 @@ public enum bool isGeometry(T) = __traits(hasMember, T, "BASE_TYPE") &&
                                  isSameContainerFunction!(_GeometryFuns!(T, T.BASE_TYPE), T, "volume") &&
                                  isSameContainerFunction!(_GeometryFuns!(T, T.BASE_TYPE), T, "contains");
 
-pragma(inline, true)
+
 public TYPE.BASE_TYPE getInseredVolume(TYPE)(TYPE old, TYPE insert) if(isGeometry!(TYPE))
 {
 	return old.maxGeometry(insert).volume() - old.volume();
