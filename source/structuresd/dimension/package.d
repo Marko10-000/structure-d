@@ -18,14 +18,76 @@ module structuresd.dimension;
 
 private
 {
+	import std.meta;
 	import std.traits;
 	import structuresd.utils;
 }
 
 public final struct Point(uint DIMS, TYPE = double)
 {
+	private static pure
+	{
+		enum bool goodSingualType(T) = __traits(compiles, {T a; TYPE b = a;});
+		bool suiableTypes(T...)()
+		{
+			bool result = true;
+			static foreach(I; T)
+			{
+				static if(!goodSingualType!I && !(__traits(isSame, TemplateOf!I, Point) && goodSingualType!(TemplateArgsOf!I[1])))
+				{
+					result = false;
+				}
+			}
+			return result;
+		}
+		ulong countDims(T...)()
+		{
+			ulong result = 0;
+			static foreach(I; T)
+			{
+				static if(goodSingualType!I)
+				{
+					result++;
+				}
+				else static if(__traits(isSame, TemplateOf!I, Point) && goodSingualType!(TemplateArgsOf!I[1]))
+				{
+					result += TemplateArgsOf!I[0];
+				}
+				else
+				{
+					static assert(false);
+				}
+			}
+			return result;
+		}
+	}
+
 	public TYPE[DIMS] dims;
 
+	public this(T...)(T data) if(suiableTypes!T && countDims!T == DIMS)
+	{
+		ulong position = 0;
+		static foreach(i; data)
+		{
+			static if(goodSingualType!(typeof(i)))
+			{
+				this.dims[position] = i;
+				position++;
+			}
+			else static if(__traits(isSame, TemplateOf!(typeof(i)), Point) && goodSingualType!(TemplateArgsOf!(typeof(i))[1]))
+			{
+				static foreach(j; i.dims)
+				{
+					this.dims[position] = j;
+					position++;
+				}
+			}
+			else
+			{
+				static assert(false);
+			}
+		}
+	}
 	public this(TYPE[DIMS] dims)
 	{
 		this.dims = dims;
